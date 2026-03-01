@@ -57,12 +57,14 @@ export const authApi = {
 export const householdApi = {
   create: async (name: string): Promise<{ household: Household }> => {
     const res = await api.post("/household", { name });
-    return res.data;
+    // Backend returns { data: household }
+    return { household: res.data.data ?? res.data };
   },
 
   join: async (inviteCode: string): Promise<{ household: Household }> => {
     const res = await api.post("/household/join", { inviteCode });
-    return res.data;
+    // Backend returns { data: household }
+    return { household: res.data.data ?? res.data };
   },
 
   // Returns array of all households user belongs to
