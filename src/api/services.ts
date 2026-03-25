@@ -9,6 +9,7 @@ import type {
   Settlement,
   PaginatedSettlements,
 } from "@/types";
+import type { InventoryItem, InventoryCategory, InventoryStatus } from "@/types";
 
 // ── Auth ──────────────────────────────────────────────
 export const authApi = {
@@ -71,6 +72,7 @@ export const householdApi = {
     return { households };
   },
 };
+
 
 // ── Expenses ──────────────────────────────────────────
 export const expenseApi = {
@@ -139,3 +141,53 @@ export const expenseApi = {
     return res.data;
   },
 };
+
+
+// ── Inventory ─────────────────────────────────────────
+
+export const inventoryApi = {
+  getItems: async (
+    householdId: string,
+    params?: { category?: InventoryCategory; status?: InventoryStatus; limit?: number }
+  ): Promise<{ items: InventoryItem[] }> => {
+    const res = await api.get(`/inventory/${householdId}`, { params });
+    return res.data;
+  },
+  addItem: async (data: {
+    householdId: string;
+    name: string;
+    category: InventoryCategory;
+    quantity: number;
+    unit: string;
+    notes?: string;
+  }): Promise<InventoryItem> => {
+    const res = await api.post(`/inventory/add`, data);
+    return res.data;
+  },
+  updateItem: async (
+    itemId: string,
+    data: {
+      name?: string;
+      category?: InventoryCategory;
+      quantity?: number;
+      unit?: string;
+      notes?: string;
+    }
+  ): Promise<InventoryItem> => {
+    const res = await api.put(`/inventory/${itemId}`, data);
+    return res.data;
+  },
+  deleteItem: async (itemId: string): Promise<{ message: string }> => {
+    const res = await api.delete(`/inventory/${itemId}`);
+    return res.data;
+  },
+  markLow: async (itemId: string): Promise<InventoryItem> => {
+    const res = await api.patch(`/inventory/${itemId}/mark-low`);
+    return res.data;
+  },
+  markEmpty: async (itemId: string): Promise<InventoryItem> => {
+    const res = await api.patch(`/inventory/${itemId}/mark-empty`);
+    return res.data;
+  },
+};
+

@@ -102,3 +102,37 @@ export interface PaginatedSettlements {
   settlements: Settlement[];
   pagination: PaginationInfo;
 }
+
+// Inventory Types
+export type InventoryCategory =
+  | "dairy"
+  | "vegetables"
+  | "fruits"
+  | "meat"
+  | "seafood"
+  | "bakery"
+  | "beverages"
+  | "snacks"
+  | "frozen"
+  | "canned"
+  | "condiments"
+  | "cleaning"
+  | "personal_care"
+  | "household"
+  | "other";
+
+export type InventoryStatus = "available" | "low" | "empty";
+
+export interface InventoryItem {
+  _id: string;
+  householdId: string;
+  name: string;
+  category: InventoryCategory;
+  quantity: number;
+  unit: string;
+  status: InventoryStatus;
+  notes?: string;
+  lastPurchased?: string;
+  createdAt: string;
+  updatedAt: string;
+}
