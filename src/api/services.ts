@@ -189,5 +189,18 @@ export const inventoryApi = {
     const res = await api.patch(`/inventory/${itemId}/mark-empty`);
     return res.data;
   },
+  // Shopping List Methods
+  getShoppingList: async (householdId: string): Promise<{ items: InventoryItem[] }> => {
+    const res = await api.get(`/shopping-list/${householdId}`);
+    return res.data;
+  },
+  markPurchased: async (itemId: string): Promise<InventoryItem> => {
+    const res = await api.patch(`/shopping-list/${itemId}/mark-purchased`);
+    return res.data;
+  },
+  bulkMarkPurchased: async (data: { householdId: string; itemIds: string[] }): Promise<{ count: number }> => {
+    const res = await api.post(`/shopping-list/bulk-mark-purchased`, data);
+    return res.data;
+  },
 };
 
