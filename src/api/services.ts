@@ -8,11 +8,6 @@ import type {
   PaginatedExpenses,
   Settlement,
   PaginatedSettlements,
-  InventoryItem,
-  InventoryCategory,
-  InventoryStatus,
-  PaginatedInventory,
-  ShoppingListResponse,
 } from "@/types";
 
 // ── Auth ──────────────────────────────────────────────
@@ -47,9 +42,8 @@ export const authApi = {
   changePassword: async (data: {
     currentPassword: string;
     newPassword: string;
-  }): Promise<{ message: string }> => {
-    const res = await api.post("/users/change-password", data);
-    return res.data;
+  }): Promise<void> => {
+    await api.post("/users/change-password", data);
   },
 };
 
@@ -57,14 +51,12 @@ export const authApi = {
 export const householdApi = {
   create: async (name: string): Promise<{ household: Household }> => {
     const res = await api.post("/household", { name });
-    // Backend returns { data: household }
-    return { household: res.data.data ?? res.data };
+    return res.data;
   },
 
   join: async (inviteCode: string): Promise<{ household: Household }> => {
     const res = await api.post("/household/join", { inviteCode });
-    // Backend returns { data: household }
-    return { household: res.data.data ?? res.data };
+    return res.data;
   },
 
   // Returns array of all households user belongs to
@@ -144,87 +136,6 @@ export const expenseApi = {
 
   deleteExpense: async (expenseId: string): Promise<{ message: string }> => {
     const res = await api.delete(`/expenses/${expenseId}`);
-    return res.data;
-  },
-};
-
-// ── Inventory ─────────────────────────────────────────
-export const inventoryApi = {
-  addItem: async (data: {
-    householdId: string;
-    name: string;
-    category?: InventoryCategory;
-    quantity?: number;
-    unit?: string;
-    notes?: string;
-  }): Promise<InventoryItem> => {
-    const res = await api.post("/inventory", data);
-    return res.data.data;
-  },
-
-  getItems: async (
-    householdId: string,
-    options?: {
-      category?: InventoryCategory;
-      status?: InventoryStatus;
-      page?: number;
-      limit?: number;
-    }
-  ): Promise<PaginatedInventory> => {
-    const res = await api.get(`/inventory/${householdId}`, {
-      params: options,
-    });
-    return res.data.data;
-  },
-
-  getShoppingList: async (householdId: string): Promise<ShoppingListResponse> => {
-    const res = await api.get(`/inventory/shopping-list/${householdId}`);
-    return res.data.data;
-  },
-
-  updateItem: async (
-    itemId: string,
-    data: {
-      name?: string;
-      category?: InventoryCategory;
-      quantity?: number;
-      unit?: string;
-      status?: InventoryStatus;
-      notes?: string;
-    }
-  ): Promise<InventoryItem> => {
-    const res = await api.patch(`/inventory/${itemId}`, data);
-    return res.data.data;
-  },
-
-  markEmpty: async (itemId: string): Promise<InventoryItem> => {
-    const res = await api.post(`/inventory/${itemId}/mark-empty`);
-    return res.data.data;
-  },
-
-  markLow: async (itemId: string): Promise<InventoryItem> => {
-    const res = await api.post(`/inventory/${itemId}/mark-low`);
-    return res.data.data;
-  },
-
-  markPurchased: async (
-    itemId: string,
-    quantity?: number
-  ): Promise<InventoryItem> => {
-    const res = await api.post(`/inventory/${itemId}/mark-purchased`, { quantity });
-    return res.data.data;
-  },
-
-  bulkMarkPurchased: async (data: {
-    householdId: string;
-    itemIds: string[];
-  }): Promise<{ message: string; count: number }> => {
-    const res = await api.post("/inventory/bulk-purchased", data);
-    return res.data.data;
-  },
-
-  deleteItem: async (itemId: string): Promise<{ message: string }> => {
-    const res = await api.delete(`/inventory/${itemId}`);
     return res.data;
   },
 };

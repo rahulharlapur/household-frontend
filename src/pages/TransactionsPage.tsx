@@ -33,13 +33,6 @@ function getPaidByName(paidBy: Expense["paidBy"]): string {
   return "Someone";
 }
 
-function getPaidById(paidBy: Expense["paidBy"]): string {
-  if (typeof paidBy === "object" && paidBy !== null) {
-    return (paidBy as { _id: string })._id;
-  }
-  return paidBy as string;
-}
-
 function getAddedById(addedBy: Expense["addedBy"]): string {
   if (typeof addedBy === "object" && addedBy !== null) {
     return (addedBy as { _id: string })._id;
@@ -161,8 +154,8 @@ function ExpenseDetail({ expense, householdOwnerId, onClose, onDeleted }: {
 function ExpenseCard({ expense, onClick }: { expense: Expense; onClick: () => void }) {
   const user = useAuthStore((s) => s.user);
   const paidByName = getPaidByName(expense.paidBy);
-  const paidById = getPaidById(expense.paidBy);
-  const iDidntPay = paidById !== user?._id;
+  const addedById = getAddedById(expense.addedBy);
+  const iDidntPay = addedById !== user?._id;
   const mySplit = expense.splitDetails.find((s) => getSplitUserId(s) === user?._id);
 
   return (
