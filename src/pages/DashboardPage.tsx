@@ -16,7 +16,7 @@ import {
 import { expenseApi, householdApi } from "@/api/services";
 import { useAuthStore } from "@/store/authStore";
 import { useHouseholdStore } from "@/store/householdStore";
-import { formatCurrency, getInitials, getErrorMessage, cn } from "@/lib/utils";
+import { formatCurrency, getInitials, getErrorMessage } from "@/lib/utils";
 import { useToast } from "@/hooks/useToast";
 import type { Debt, Settlement } from "@/types";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -43,7 +43,7 @@ function DebtCard({
   const otherName = youOwe ? debt.to.name : debt.from.name;
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-border last:border-0 transition-transform duration-200 hover:scale-[1.01] active:scale-[1.01] rounded-lg hover:bg-muted/50 -mx-2 px-2">
+    <div className="flex items-center justify-between py-3 border-b border-border last:border-0">
       <div className="flex items-center gap-3">
         <Avatar className="h-9 w-9">
           <AvatarFallback className="text-xs">
@@ -101,7 +101,7 @@ function SettlementCard({ settlement, currentUserId }: { settlement: Settlement;
   });
 
   return (
-    <div className="flex items-center justify-between py-3 border-b border-border last:border-0 transition-transform duration-200 hover:scale-[1.01] active:scale-[1.01] rounded-lg hover:bg-muted/50 -mx-2 px-2">
+    <div className="flex items-center justify-between py-3 border-b border-border last:border-0">
       <div className="flex items-center gap-3">
         <Avatar className="h-9 w-9">
           <AvatarFallback className="text-xs">
@@ -158,7 +158,7 @@ export function DashboardPage() {
 
   const householdId = activeHouseholdId;
 
-  const { data, isLoading, isError, refetch, isFetching } = useQuery({
+  const { data, isLoading, isError, refetch } = useQuery({
     queryKey: ["balances", householdId],
     queryFn: () => expenseApi.getBalances(householdId!),
     enabled: !!householdId,
@@ -257,15 +257,14 @@ export function DashboardPage() {
         </div>
         <button
           onClick={() => refetch()}
-          disabled={isFetching}
-          className="p-2 rounded-xl hover:bg-accent transition-colors disabled:opacity-50"
+          className="p-2 rounded-xl hover:bg-accent transition-colors"
         >
-          <RefreshCw className={cn("h-4 w-4 text-muted-foreground transition-transform", isFetching && "animate-spin")} />
+          <RefreshCw className="h-4 w-4 text-muted-foreground" />
         </button>
       </div>
 
       <Card
-        className={`mb-5 ${myBalance >= 0 ? "bg-primary" : "bg-destructive"} border-0 text-white transition-transform duration-200 hover:scale-[1.02] active:scale-[1.02] cursor-pointer`}
+        className={`mb-5 ${myBalance >= 0 ? "bg-primary" : "bg-destructive"} border-0 text-white`}
       >
         <CardContent className="p-6">
           <p className="text-white/70 text-sm mb-1">Your net balance</p>
@@ -400,7 +399,6 @@ export function DashboardPage() {
               <Input
                 id="amount"
                 type="number"
-                inputMode="decimal"
                 step="0.01"
                 min="0.01"
                 max={pendingSettle?.maxAmount}
