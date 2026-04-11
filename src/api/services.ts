@@ -150,8 +150,8 @@ export const inventoryApi = {
     householdId: string,
     params?: { category?: InventoryCategory; status?: InventoryStatus; limit?: number }
   ): Promise<{ items: InventoryItem[] }> => {
-    const res = await api.get(`/inventory/${householdId}`, { params });
-    return res.data;
+    const res = await api.get(`/inventory/${householdId}`, { params });    
+    return res.data.data;
   },
   addItem: async (data: {
     householdId: string;
